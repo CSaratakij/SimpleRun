@@ -2,16 +2,19 @@
 
 namespace SimpleRun
 {
+    public enum SwipeDirection
+    {
+        None,
+        Left,
+        Right
+    }
+
     public class SwipeInput : MonoBehaviour
     {
-        public static SwipeInput instance = null;
+        public delegate void Func(SwipeDirection direction);
+        public static event Func OnSwipe;
 
-        public enum SwipeDirection
-        {
-            None,
-            Left,
-            Right
-        }
+        public static SwipeInput instance = null;
 
         Touch currentTouch;
 
@@ -29,11 +32,6 @@ namespace SimpleRun
             _InputHandler();
         }
 
-        void LateUpdate()
-        {
-            _Reset();
-        }
-
         void _MakeSingleton()
         {
             if (instance == null) {
@@ -48,6 +46,7 @@ namespace SimpleRun
         void _InputHandler()
         {
             if (Input.touchCount <= 0) { return; }
+
             for (int i = 0; i < Input.touchCount; i++) {
                 currentTouch = Input.GetTouch(i);
 
@@ -58,6 +57,8 @@ namespace SimpleRun
 
                     case TouchPhase.Ended:
                         endTouchPosition = currentTouch.position;
+                        _FireEvent_OnSwipe(GetSwipeDirection());
+                        _Reset();
                         break;
 
                     default:
@@ -66,10 +67,22 @@ namespace SimpleRun
             }
         }
 
+        void _FireEvent_OnSwipe(SwipeDirection direction)
+        {
+            if (OnSwipe != null) {
+                OnSwipe(direction);
+            }
+        }
+
         void _Reset()
         {
             beginTouchPosition = Vector2.zero;
             endTouchPosition = Vector2.zero;
+        }
+
+        public Vector2 GetSwipeAxisRaw()
+        {
+            return (endTouchPosition - beginTouchPosition);
         }
 
         public Vector2 GetSwipeAxis()
@@ -90,6 +103,11 @@ namespace SimpleRun
             }
 
             return direction;
+        }
+
+        public bool IsSwipeAtDirection(SwipeDirection direction)
+        {
+            return direction == GetSwipeDirection();
         }
     }
 }

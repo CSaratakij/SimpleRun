@@ -2,15 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameController : MonoBehaviour {
+namespace SimpleRun
+{
+    public class GameController
+    {
+        public delegate void Func();
+        public static event Func OnGameStart;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+        static bool isGameStart;
+
+
+        static void _FireEvent_OnGameStart()
+        {
+            if (OnGameStart != null) {
+                OnGameStart();
+            }
+        }
+
+        static void _Initialize()
+        {
+            LaneInfo.SetUpLane(3);
+            LaneInfo.GoToCenterLane();
+        }
+
+        public static void GameStart()
+        {
+            if (isGameStart) { return; }
+            _Initialize();
+
+            isGameStart = true;
+            _FireEvent_OnGameStart();
+        }
+    }
 }
