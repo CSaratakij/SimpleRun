@@ -12,6 +12,10 @@ namespace SimpleRun
         static Vector3[] lanePositions;
 
 
+        public static int MaximumLane { get { return currentMaximumLane; } }
+        public static Vector3[] LanePositions { get { return lanePositions; } }
+
+
         public static void SetUpLane(int value = 1)
         {
             currentMaximumLane = value;

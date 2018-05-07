@@ -15,15 +15,15 @@ namespace SimpleRun
             _Subscribe_Event();
         }
 
-        //Test..
-        void Start()
-        {
-            GameController.GameStart();
-        }
-
         void Update()
         {
             _InputHandler();
+        }
+
+        void FixedUpdate()
+        {
+            //physics cast here..
+            //if detect obstacle -> game over..
         }
 
         void OnDestroy()
@@ -50,6 +50,9 @@ namespace SimpleRun
 
         void _OnSwipe(SwipeDirection direction)
         {
+            if (!GameController.IsGameStart) { return; }
+            if (GameController.IsGamePause) { return; }
+
             if (direction == SwipeDirection.Left) {
                 _MoveToLeftLane();
             }
@@ -60,6 +63,9 @@ namespace SimpleRun
 
         void _InputHandler()
         {
+            if (!GameController.IsGameStart) { return; }
+            if (GameController.IsGamePause) { return; }
+
             if (Input.GetKeyDown(KeyCode.A)) {
                 _MoveToLeftLane();
             }
