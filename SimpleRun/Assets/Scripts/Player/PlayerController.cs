@@ -9,6 +9,15 @@ namespace SimpleRun
         [SerializeField]
         Vector3 offset;
 
+        [SerializeField]
+        LayerMask obstacleMask;
+
+        [SerializeField]
+        Vector3 origin;
+
+        [SerializeField]
+        Vector2 size;
+
 
         void Awake()
         {

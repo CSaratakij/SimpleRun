@@ -145,7 +145,7 @@ namespace SimpleRun
                     if (pickPatternMap[i] == OBSTACLE_MARK) {
 
                         //random avaliable obstacle in pattern
-                        int pickObstacleIndex = (int)UnityEngine.Random.Range(0, 2);
+                        int pickObstacleIndex = (int)UnityEngine.Random.Range(0, 3);
 
                         switch ((BlueprintType)pickObstacleIndex) {
 
