@@ -19,6 +19,8 @@ namespace SimpleRun
         LayerMask obstacleMask;
 
 
+        bool isCanMove;
+
         AudioSource audioSource;
         Collider2D hit;
 
@@ -67,8 +69,7 @@ namespace SimpleRun
         void _OnSwipe(SwipeDirection direction)
         {
             if (!GameController.IsGameStart) { return; }
-
-            if (GameController.IsGamePause) { 
+            if (GameController.IsGamePause || !isCanMove) { 
                 SwipeInput.instance.ClearSwipe();
                 return; 
             }
@@ -84,19 +85,33 @@ namespace SimpleRun
         void _OnGameStart()
         {
             transform.position = LaneInfo.GetCurrentLanePosition() + offset;
+            isCanMove = true;
         }
 
         void _OnGamePause(bool isPause)
         {
-            if (!isPause) {
-                SwipeInput.instance.ClearSwipe();
+            SwipeInput.instance.ClearSwipe();
+
+            if (isPause) {
+                isCanMove = false;
             }
+            else {
+                StartCoroutine(_Pause_Callback());
+            }
+        }
+
+        IEnumerator _Pause_Callback()
+        {
+            SwipeInput.instance.ClearSwipe();
+            yield return new WaitForSeconds(0.2f);
+            isCanMove = true;
         }
 
         void _InputHandler()
         {
             if (!GameController.IsGameStart) { return; }
             if (GameController.IsGamePause) { return; }
+            if (!isCanMove) { return; }
 
             if (Input.GetKeyDown(KeyCode.A)) {
                 _MoveToLeftLane();
