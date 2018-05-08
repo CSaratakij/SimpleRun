@@ -110,6 +110,7 @@ namespace SimpleRun
         {
             if (hit) {
                 if (hit.transform.CompareTag("coin")) {
+                    Global.AddScore(1);
                     audioSource.Play();
                     hit.gameObject.SetActive(false);
                 }

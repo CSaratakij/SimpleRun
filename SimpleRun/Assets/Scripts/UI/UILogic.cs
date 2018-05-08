@@ -19,6 +19,8 @@ namespace SimpleRun
 
         public void RestartGame()
         {
+            Global.ClearScore();
+
             var scene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(scene.name);
         }
