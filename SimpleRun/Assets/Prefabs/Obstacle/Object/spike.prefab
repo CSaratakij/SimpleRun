@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 212709821871481788}
   - component: {fileID: 61367786571151874}
   - component: {fileID: 114664636984450928}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: spike
-  m_TagString: Untagged
+  m_TagString: spike
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

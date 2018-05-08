@@ -109,5 +109,10 @@ namespace SimpleRun
         {
             return direction == GetSwipeDirection();
         }
+
+        public void ClearSwipe()
+        {
+            _Reset();
+        }
     }
 }

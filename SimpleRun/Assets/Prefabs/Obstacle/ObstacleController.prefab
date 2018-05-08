@@ -55,4 +55,4 @@ MonoBehaviour:
   - {fileID: 1747561312459718, guid: d96ce08200153fc4ab3c575ac3df78a5, type: 2}
   - {fileID: 1679902471327566, guid: fda1e26553eac0140a7cc36641445e74, type: 2}
   - {fileID: 1992257256296406, guid: 291dc9aa210b6de4f9dbc319b464ae4e, type: 2}
-  maximumPooling: 30
+  maximumPooling: 10

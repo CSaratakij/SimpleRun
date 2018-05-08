@@ -15,7 +15,7 @@ namespace SimpleRun
         GameObject[] blueprints;
 
         [SerializeField]
-        [Range(1, 30)]
+        [Range(1, 10)]
         int maximumPooling;
 
 

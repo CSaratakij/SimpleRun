@@ -10,17 +10,22 @@ namespace SimpleRun
         Vector3 offset;
 
         [SerializeField]
-        LayerMask obstacleMask;
-
-        [SerializeField]
-        Vector3 origin;
+        Transform origin;
 
         [SerializeField]
         Vector2 size;
 
+        [SerializeField]
+        LayerMask obstacleMask;
+
+
+        AudioSource audioSource;
+        Collider2D hit;
+
 
         void Awake()
         {
+            audioSource = GetComponent<AudioSource>();
             _Subscribe_Event();
         }
 
@@ -31,8 +36,13 @@ namespace SimpleRun
 
         void FixedUpdate()
         {
-            //physics cast here..
-            //if detect obstacle -> game over..
+            if (!GameController.IsGameStart) { 
+                hit = null;
+                return; 
+            }
+
+            hit = Physics2D.OverlapBox(origin.position, size, 0.0f, obstacleMask);
+            _HitObstacleHandler();
         }
 
         void OnDestroy()
@@ -42,14 +52,33 @@ namespace SimpleRun
 
         void _Subscribe_Event()
         {
-            GameController.OnGameStart += _OnGameStart;
             SwipeInput.OnSwipe += _OnSwipe;
+            GameController.OnGameStart += _OnGameStart;
+            GameController.OnGamePause += _OnGamePause;
         }
 
         void _Unsubscribe_Event()
         {
-            GameController.OnGameStart -= _OnGameStart;
             SwipeInput.OnSwipe -= _OnSwipe;
+            GameController.OnGameStart -= _OnGameStart;
+            GameController.OnGamePause -= _OnGamePause;
+        }
+
+        void _OnSwipe(SwipeDirection direction)
+        {
+            if (!GameController.IsGameStart) { return; }
+
+            if (GameController.IsGamePause) { 
+                SwipeInput.instance.ClearSwipe();
+                return; 
+            }
+
+            if (direction == SwipeDirection.Left) {
+                _MoveToLeftLane();
+            }
+            else if (direction == SwipeDirection.Right) {
+                _MoveToRightLane();
+            }
         }
 
         void _OnGameStart()
@@ -57,16 +86,10 @@ namespace SimpleRun
             transform.position = LaneInfo.GetCurrentLanePosition() + offset;
         }
 
-        void _OnSwipe(SwipeDirection direction)
+        void _OnGamePause(bool isPause)
         {
-            if (!GameController.IsGameStart) { return; }
-            if (GameController.IsGamePause) { return; }
-
-            if (direction == SwipeDirection.Left) {
-                _MoveToLeftLane();
-            }
-            else if (direction == SwipeDirection.Right) {
-                _MoveToRightLane();
+            if (!isPause) {
+                SwipeInput.instance.ClearSwipe();
             }
         }
 
@@ -80,6 +103,20 @@ namespace SimpleRun
             }
             else if (Input.GetKeyDown(KeyCode.D)) {
                 _MoveToRightLane();
+            }
+        }
+
+        void _HitObstacleHandler()
+        {
+            if (hit) {
+                if (hit.transform.CompareTag("coin")) {
+                    Debug.Log("Collect coin.");
+                    //play sound??
+                    hit.gameObject.SetActive(false);
+                }
+                else {
+                    GameController.GameOver();
+                }
             }
         }
 
