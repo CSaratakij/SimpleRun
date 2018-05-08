@@ -70,7 +70,6 @@ namespace SimpleRun
 
         void _Initialize()
         {
-            UnityEngine.Random.InitState((int)UnityEngine.Random.value);
             _CreatePool();
         }
 
